@@ -59,7 +59,7 @@ public class TxStartTransactionServerImpl implements TransactionServer {
         TxTransactionLocal txTransactionLocal = new TxTransactionLocal();
         txTransactionLocal.setGroupId(groupId);
         txTransactionLocal.setHasStart(true);
-        txTransactionLocal.setMaxTimeOut(Constants.txServer.getAutoCompensateLimit());
+        txTransactionLocal.setMaxTimeOut(Constants.txServer.getCompensateMaxWaitTime());
         TxTransactionLocal.setCurrent(txTransactionLocal);
 
         try {
@@ -120,6 +120,12 @@ public class TxStartTransactionServerImpl implements TransactionServer {
                             if (executeConnectionError == 1||(lastState == 1 && rs == 0)) {
                                 //记录补偿日志
                                 txManagerService.sendCompensateMsg(groupId, time, info,executeConnectionError);
+                            }
+                        }else{
+                            if(rs==1){
+                                lastState = 1;
+                            }else{
+                                lastState = 0;
                             }
                         }
 

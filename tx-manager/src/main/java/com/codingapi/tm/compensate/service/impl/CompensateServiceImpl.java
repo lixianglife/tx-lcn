@@ -226,7 +226,7 @@ public class CompensateServiceImpl implements CompensateService {
 
             String groupId = jsonObject.getString("groupId");
 
-            String key = path + "_" + groupId;
+            String key = path + ":" + groupId;
             model.setKey(key);
 
             models.add(model);
@@ -329,6 +329,8 @@ public class CompensateServiceImpl implements CompensateService {
         String groupId = jsonObject.getString("groupId");
 
         String res = managerSenderService.sendCompensateMsg(modelInfo.getChannelName(), groupId, data,startError);
+
+        logger.debug("executeCompensate->"+json+",@@->"+res);
 
         return "1".equals(res);
     }
